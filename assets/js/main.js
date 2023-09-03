@@ -25,9 +25,20 @@ function convertPokemonToLi(pokemon) {
 
 function loadPokemonItens(offset, limit) {
     pokeApi.getPokemons(offset, limit).then((pokemons = []) => {
-        const newHtml = pokemons.map(convertPokemonToLi).join('')
-        pokemonList.innerHTML += newHtml
-    })
+        const newHtml = pokemons.map(convertPokemonToLi).join('');
+        pokemonList.innerHTML += newHtml;
+
+        // Adicione event listeners de clique aos elementos recém-renderizados
+        const pokemonElements = document.querySelectorAll('.pokemon');
+        pokemonElements.forEach((element, index) => {
+            element.addEventListener('click', async () => {
+                const id = Number(element.children[0].innerHTML.slice(1));
+                const pokemonData = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`)
+                const details = await pokemonData.json();
+                console.log(details);
+            });
+        });
+    });
 }
 
 loadPokemonItens(offset, limit)
